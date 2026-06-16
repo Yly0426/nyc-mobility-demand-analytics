@@ -1,0 +1,27 @@
+# Local data and generated outputs
+data/raw/
+data/processed/
+data/warehouse/
+reports/figures/
+reports/tables/
+reports/*.csv
+reports/*.json
+work/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,22 @@
+project:
+  name: nyc-mobility-demand-analytics
+  raw_root: data/raw/nyc_tlc
+  processed_root: data/processed
+  warehouse_root: data/warehouse
+
+datasets:
+  yellow:
+    pattern: data/raw/nyc_tlc/yellow/yellow_tripdata_*.parquet
+    service_type: yellow_taxi
+  fhvhv:
+    pattern: data/raw/nyc_tlc/fhvhv/fhvhv_tripdata_*.parquet
+    service_type: high_volume_fhv
+  zones: data/raw/nyc_tlc/taxi_zone_lookup.csv
+
+quality_rules:
+  max_trip_hours: 8
+  min_trip_miles: 0.01
+  max_trip_miles: 200
+  min_fare_amount: 0
+  max_total_amount: 1000
+
