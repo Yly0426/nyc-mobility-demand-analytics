@@ -1,0 +1,13 @@
+dimension,segment,pre_order_count,post_order_count,absolute_change,relative_change
+hour_group,night,89948,59983,-29965,-0.33313692355583224
+day_type,weekday,59964,0,-59964,-1.0
+day_type,weekend,29984,59983,29999,1.0005002668089649
+distance_group,short,27810,18561,-9249,-0.3325782092772384
+distance_group,medium,45726,30811,-14915,-0.3261820408520317
+distance_group,long,16412,10611,-5801,-0.3534608822812576
+pickup_zone_group,control_zones,2626,1616,-1010,-0.38461538461538464
+pickup_zone_group,other,67124,43964,-23160,-0.3450330731184077
+pickup_zone_group,spillover_zones,6176,4567,-1609,-0.2605246113989637
+pickup_zone_group,treated_zones,14022,9836,-4186,-0.29853088004564254
+airport_flag,airport,2243,1249,-994,-0.4431564868479715
+airport_flag,non_airport,87705,58734,-28971,-0.3303232426885582

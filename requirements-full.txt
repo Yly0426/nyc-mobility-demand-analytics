@@ -1,0 +1,7 @@
+-r requirements.txt
+
+# Optional local dependencies for the full ETL and warehouse workflow.
+sqlalchemy>=2.0
+psycopg2-binary>=2.9
+pyspark>=3.5
+python-dotenv>=1.0
