@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import math
 from pathlib import Path
 
 import pandas as pd
@@ -14,16 +15,25 @@ from src.utils.project import ensure_output_dirs, resolve_project_path
 
 
 def read_bounded_parquet(path: Path, max_rows: int) -> pd.DataFrame:
-    """Read up to max_rows from a Parquet file by record batch."""
+    """Read a time-spread sample across a monthly Parquet file's row groups."""
+    parquet_file = pq.ParquetFile(path)
+    group_count = min(parquet_file.num_row_groups, 12)
+    if group_count == 0:
+        return pd.DataFrame()
+    if group_count == 1:
+        selected_groups = [0]
+    else:
+        selected_groups = sorted({round(index * (parquet_file.num_row_groups - 1) / (group_count - 1)) for index in range(group_count)})
+    rows_per_group = math.ceil(max_rows / len(selected_groups))
     pieces: list[pd.DataFrame] = []
-    remaining = max_rows
-    for batch in pq.ParquetFile(path).iter_batches(batch_size=min(100_000, max_rows)):
-        piece = batch.to_pandas().head(remaining)
+    for position, group_index in enumerate(selected_groups):
+        piece = parquet_file.read_row_group(group_index).to_pandas()
+        if len(piece) > rows_per_group:
+            piece = piece.sample(n=rows_per_group, random_state=42 + position)
         pieces.append(piece)
-        remaining -= len(piece)
-        if remaining <= 0:
-            break
-    return pd.concat(pieces, ignore_index=True) if pieces else pd.DataFrame()
+    if not pieces:
+        return pd.DataFrame()
+    return pd.concat(pieces, ignore_index=True).sample(frac=1, random_state=42).head(max_rows).reset_index(drop=True)
 
 
 def clean_files(files: list[Path], rows_per_file: int) -> pd.DataFrame:

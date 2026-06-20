@@ -1,6 +1,6 @@
 metric_name,coef_treated_post,std_error,p_value,confidence_interval_low,confidence_interval_high,n_observations,business_interpretation
-log_order_count,0.21570407743559838,0.11737589846186952,0.066103623323041,-0.014348456202696203,0.44575661107389297,120,Policy-period treated-zone change relative to control zones; negative demand coefficients indicate a relative demand contraction.
-avg_fare_per_mile,1.506833727173131,0.656032125677329,0.02162503707007753,0.22103438814431153,2.79263306620195,120,Policy-period treated-zone price or driver-side metric change relative to control zones.
-avg_driver_pay_per_minute,0.20599486861163466,0.03850487112788424,8.803241983028937e-08,0.13052670797162536,0.28146302925164396,120,Policy-period treated-zone price or driver-side metric change relative to control zones.
-airport_trip_count,-0.2037037037037035,0.2656722876867466,0.4432313398478821,-0.7244118192600909,0.3170044118526839,120,Policy-period treated-zone price or driver-side metric change relative to control zones.
-short_trip_count,13.333333333333362,5.916824482105976,0.02423009582919829,1.7365704455607922,24.930096221105934,120,Policy-period treated-zone price or driver-side metric change relative to control zones.
+log_order_count,0.008850202703518915,0.008986849077631138,0.3247248500571258,-0.00876369782313512,0.02646410323017295,28150,Policy-period treated-zone change relative to control zones; negative demand coefficients indicate a relative demand contraction.
+avg_fare_per_mile,-0.5793063929260088,0.22830842625163633,0.011168403152801215,-1.026782685746235,-0.1318301001057826,28150,Policy-period treated-zone price or driver-side metric change relative to control zones.
+avg_driver_pay_per_minute,-0.019310250425933005,0.008049304185501134,0.016440083781623534,-0.03508659673012274,-0.003533904121743269,28150,Policy-period treated-zone price or driver-side metric change relative to control zones.
+airport_trip_count,0.000892261851505298,0.007861500923504194,0.9096360289754281,-0.014515996822991295,0.01630052052600189,28150,Policy-period treated-zone price or driver-side metric change relative to control zones.
+short_trip_count,-0.014260103719904762,0.02350729579575677,0.5441000762203974,-0.060333556853517864,0.031813349413708336,28150,Policy-period treated-zone price or driver-side metric change relative to control zones.
