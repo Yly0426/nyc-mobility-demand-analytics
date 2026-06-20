@@ -1,0 +1,6 @@
+paths:
+  raw_root: data/raw/nyc_tlc
+  processed_root: data/processed
+  outputs_root: data/outputs
+  reports_root: reports
+  zones_file: data/raw/nyc_tlc/taxi_zone_lookup.csv

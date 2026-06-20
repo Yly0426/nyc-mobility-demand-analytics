@@ -1,0 +1,6 @@
+quality_rules:
+  max_trip_hours: 8
+  min_trip_miles: 0.01
+  max_trip_miles: 200
+  min_fare_amount: 0
+  max_total_amount: 1000

@@ -1,0 +1,48 @@
+policy:
+  name: NYC Congestion Pricing
+  start_date: "2025-01-05"
+  treated_area_description: Manhattan congestion relief zone proxy, based on TLC taxi zones south of 60th Street
+  event_window_weeks_before: 8
+  event_window_weeks_after: 12
+
+zone_groups:
+  treated_zones:
+    - Midtown Center
+    - Times Sq/Theatre District
+    - Penn Station/Madison Sq West
+    - Union Sq
+    - Financial District North
+    - Financial District South
+    - West Chelsea/Hudson Yards
+    - Greenwich Village North
+    - Greenwich Village South
+    - East Chelsea
+    - Gramercy
+    - Flatiron
+    - Murray Hill
+    - Kips Bay
+    - SoHo
+    - TriBeCa/Civic Center
+    - Chinatown
+    - Lower East Side
+  spillover_zones:
+    - Upper East Side South
+    - Upper West Side South
+    - East Harlem South
+    - Morningside Heights
+    - Williamsburg (North Side)
+    - Williamsburg (South Side)
+    - Long Island City/Queens Plaza
+    - Astoria
+  control_zones:
+    - Forest Hills
+    - Bay Ridge
+    - Flushing
+    - Bensonhurst West
+    - Sunnyside
+    - Jackson Heights
+
+airport_zone_names:
+  - Newark Airport
+  - JFK Airport
+  - LaGuardia Airport

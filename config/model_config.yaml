@@ -1,0 +1,12 @@
+counterfactual_model:
+  algorithm: HistGradientBoostingRegressor
+  random_state: 42
+  validation_days: 14
+  features:
+    - zone_id
+    - hour
+    - weekday
+    - is_weekend
+    - month
+    - lag_1
+    - lag_7

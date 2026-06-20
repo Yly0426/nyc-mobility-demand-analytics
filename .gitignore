@@ -1,6 +1,7 @@
 # Local data and generated outputs
 data/raw/
 data/processed/
+data/outputs/
 data/warehouse/
 reports/figures/
 reports/tables/
