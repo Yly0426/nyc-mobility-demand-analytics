@@ -1,32 +1,43 @@
-# Business Summary
+# 业务总结：从拥堵收费冲击到运营试点
 
-## 1. Why This Problem Matters
+## 1. 为什么值得做
 
-Congestion pricing changes the economics of entering Manhattan's core. For a ride-hailing platform, the material question is not simply whether orders move. It is whether supply should move too, whether passengers absorb the cost, and whether drivers still earn enough to accept affected routes.
+拥堵收费改变的是进入曼哈顿核心区的出行成本，也可能改变平台的供需匹配方式。对网约车平台来说，关键不只是核心区少了多少订单，而是需求是否转移到边界区、乘客价格变化是否挤压司机收益，以及哪些路线需要调度而非简单发券。
 
-## 2. Data and Method
+## 2. 业务问题
 
-The project uses 2024-2025 NYC TLC trip records, with High Volume FHV as the principal platform proxy. It constructs trip-level policy features, zone-hour panels and OD panels. Treated core zones are compared with configured control zones before and after the policy start; an event-study view checks whether relative movement was already visible before the intervention.
+本项目围绕六个可落地的问题展开：核心区需求是否相对变化、需求是否向边界区外溢、票价是否传导到司机收入、机场和高峰路线是否更敏感、哪些区域值得预部署司机，以及哪些低价值区域应减少无效供给。
 
-## 3. Main Findings
+## 3. 数据与方法
 
-Results are generated from the current data run rather than hard-coded into this document. The relevant outputs identify demand changes by zone and hour, likely spillover zones, changed OD routes and routes where fare changes do not pass through to driver pay.
+项目以 NYC TLC High Volume FHV 作为网约车平台代理数据，并用 Yellow Taxi 补充城市出行观察。数据被加工为区域-日期-小时和 OD-日期-小时两个面板。DiD 与事件研究负责识别相对政策影响；反事实模型只回答“实际需求偏离了无政策基线多少”，不替代因果结论。
 
-## 4. Causal Evidence
+## 4. 主要发现应如何阅读
 
-Difference-in-Differences estimates compare treated-zone change with control-zone change while accounting for zone, hour and weekday effects. Event-study estimates make the time pattern visible. The counterfactual model is deliberately secondary: it describes an expected-demand benchmark, while the quasi-experimental comparison carries the causal interpretation.
+每次运行会重算区域外溢评分、OD 路线价格/司机收入变化、异质性结果和反事实需求缺口。项目不把一次样本运行写成固定结论，而是把最新结果保存在 `reports/tables/`：外溢区域排名用于找新的调度节点；价格-司机收入结果用于区分应补贴司机还是应缓解乘客价格压力。
 
-## 5. Business Recommendations
+## 5. 因果证据
 
-- Reallocate supply toward boundary zones only when the spillover score and post-policy volume both support it.
-- Test targeted driver incentives on routes where rider price rises while driver-pay-per-minute does not.
-- Treat airport and peak windows as separate operating surfaces rather than applying one citywide policy.
-- Use a controlled rollout and monitor acceptance, idle time and fulfillment before scaling any incentive.
+处理组为配置化的曼哈顿收费核心区代理，对照组为未直接受影响的区域。DiD 估计处理组相对对照组在政策前后的变化，事件研究用于检查政策前是否已经存在明显的不同趋势。若前趋势不稳，策略卡的置信度应降低，不能将相关性当作政策效果。
 
-## 6. Limitations
+## 6. 反事实需求缺口
 
-TLC records do not reveal platform-wide supply, the exact path through the congestion zone, or all competing mobility shocks. The configured zone groups are transparent proxies and should be stress-tested. A causal estimate is conditional on the credibility of the control group and pre-trend evidence.
+反事实模型使用政策前区域小时订单和日历/滞后特征，生成无政策情况下的订单基线。`demand_gap = predicted_counterfactual_order_count - actual_order_count`。缺口大的区域只代表值得进一步检查价格与供给，不自动等于应发券。
 
-## 7. What I Would Improve Next
+## 7. 运营策略建议
 
-I would run the full Spark pipeline over the full event window, add weather and transit disruptions, define treatment with geospatial CRZ polygons, cluster uncertainty by zone, and link recommendations to a prospective A/B test.
+- **司机运力重分配**：外溢评分和政策后订单共同支持时，将边界区域放入高峰预部署池。
+- **路线级司机激励**：高价值或机场路线存在通行成本压力、司机每分钟收入未同步改善时，先做司机侧激励试点。
+- **乘客侧优惠**：需求低于基线且乘客价格压力上升、司机收益未明显恶化时，测试有预算上限的优惠。
+- **机场专项**：机场至核心区仍有需求但供给承压时，使用优先派单和路线激励，而不是与普通 OD 混用同一规则。
+- **低价值供给控制**：非机场、低外溢、司机单位时间收益走弱的区域应下调司机推荐权重，减少无效等待。
+
+每条策略均输出目标区域/路线、目标时段、证据指标、预期影响、行动优先级和置信度；所有策略均应以接单率、取消率、空驶时间和履约质量验证后再扩大。
+
+## 8. 局限
+
+TLC 数据无法观测平台真实在线司机数、等待时长、优惠券成本、司机留存，也无法确认每一趟车是否实际穿越收费区。当前区域组是透明的名称代理，sample mode 只用于验证工程链路和演示决策方法，不能作为生产投放结论。
+
+## 9. 下一步改进
+
+完整研究应跑完整 Spark 政策窗口，并加入天气、地铁故障和节假日控制变量；用拥堵收费区多边形替代名称代理；按区域聚类标准误；最后将策略清单接入线上小流量实验，闭环测量实际经营增益。

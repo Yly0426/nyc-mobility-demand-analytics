@@ -16,6 +16,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", default="data/processed/trip_policy_features.parquet")
     parser.add_argument("--output", default="data/processed/od_policy_panel.parquet")
+    parser.add_argument("--sample", action="store_true", help="Declare that the bounded sample input is being used.")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     ensure_output_dirs()

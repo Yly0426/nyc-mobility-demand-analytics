@@ -25,6 +25,7 @@ def main() -> int:
     """Write segmented pre/post demand changes and summary charts."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", default="data/processed/trip_policy_features.parquet")
+    parser.add_argument("--sample", action="store_true", help="Run the same analysis against bounded trip records.")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     data = add_segments(read_panel(args.input))

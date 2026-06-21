@@ -18,6 +18,7 @@ def main() -> int:
     parser.add_argument("--zones", default="data/raw/nyc_tlc/taxi_zone_lookup.csv")
     parser.add_argument("--config", default="config/policy_zones.yaml")
     parser.add_argument("--output", default="data/processed/trip_policy_features.parquet")
+    parser.add_argument("--sample", action="store_true", help="Declare that the bounded sample input is being used.")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     ensure_output_dirs()

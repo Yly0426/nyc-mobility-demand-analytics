@@ -17,6 +17,7 @@ def main() -> int:
     parser.add_argument("--input", default="data/processed/trip_policy_features.parquet")
     parser.add_argument("--output", default="data/processed/zone_hour_policy_panel.parquet")
     parser.add_argument("--sample-output", default="data/outputs/zone_hour_policy_panel_sample.csv")
+    parser.add_argument("--sample", action="store_true", help="Declare that the bounded sample input is being used.")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     ensure_output_dirs()

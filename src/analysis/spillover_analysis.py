@@ -15,6 +15,7 @@ def main() -> int:
     """Compare pre/post zone demand and rank configured spillover zones."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", default="data/processed/zone_hour_policy_panel.parquet")
+    parser.add_argument("--sample", action="store_true", help="Run the same analysis against the bounded sample panel.")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     panel = read_panel(args.input)

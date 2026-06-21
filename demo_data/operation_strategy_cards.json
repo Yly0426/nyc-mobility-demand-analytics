@@ -1,0 +1,242 @@
+[
+  {
+    "strategy_id": "STRAT_0001",
+    "strategy_type": "driver_supply_reallocation",
+    "target_zone": "Long Island City/Queens Plaza",
+    "target_zone_group": "spillover_zones",
+    "target_od_pair": "",
+    "target_time_window": "18:00-22:00",
+    "problem_detected": "边界区域的外溢评分和政策后需求表明，该区域可能承接了核心区转移需求。",
+    "evidence_metric": {
+      "spillover_score": 3.421,
+      "demand_gap_rate": 0.156,
+      "post_policy_average_orders": 1.21
+    },
+    "recommended_action": "在目标时段前预部署司机，并按实时请求量动态调整区域推荐权重。",
+    "expected_business_impact": "缩短边界区接驾时间，减少核心区无效等待。",
+    "final_action_score": 0.33,
+    "priority": "Low",
+    "confidence_level": "Low",
+    "created_at": "2026-06-21T13:51:24.556737+00:00"
+  },
+  {
+    "strategy_id": "STRAT_0002",
+    "strategy_type": "driver_supply_reallocation",
+    "target_zone": "Astoria",
+    "target_zone_group": "spillover_zones",
+    "target_od_pair": "",
+    "target_time_window": "18:00-22:00",
+    "problem_detected": "边界区域的外溢评分和政策后需求表明，该区域可能承接了核心区转移需求。",
+    "evidence_metric": {
+      "spillover_score": 2.966,
+      "demand_gap_rate": -0.135,
+      "post_policy_average_orders": 1.92
+    },
+    "recommended_action": "在目标时段前预部署司机，并按实时请求量动态调整区域推荐权重。",
+    "expected_business_impact": "缩短边界区接驾时间，减少核心区无效等待。",
+    "final_action_score": 0.121,
+    "priority": "Low",
+    "confidence_level": "Low",
+    "created_at": "2026-06-21T13:51:24.556737+00:00"
+  },
+  {
+    "strategy_id": "STRAT_0003",
+    "strategy_type": "driver_supply_reallocation",
+    "target_zone": "Morningside Heights",
+    "target_zone_group": "spillover_zones",
+    "target_od_pair": "",
+    "target_time_window": "17:00-21:00",
+    "problem_detected": "边界区域的外溢评分和政策后需求表明，该区域可能承接了核心区转移需求。",
+    "evidence_metric": {
+      "spillover_score": 3.336,
+      "demand_gap_rate": -0.03,
+      "post_policy_average_orders": 1.45
+    },
+    "recommended_action": "在目标时段前预部署司机，并按实时请求量动态调整区域推荐权重。",
+    "expected_business_impact": "缩短边界区接驾时间，减少核心区无效等待。",
+    "final_action_score": 0.111,
+    "priority": "Low",
+    "confidence_level": "Low",
+    "created_at": "2026-06-21T13:51:24.556737+00:00"
+  },
+  {
+    "strategy_id": "STRAT_0004",
+    "strategy_type": "route_level_driver_incentive",
+    "target_zone": "",
+    "target_zone_group": "",
+    "target_od_pair": "Van Cortlandt Village -> Van Cortlandt Village",
+    "target_time_window": "晚高峰优先",
+    "problem_detected": "该高价值路线的通行成本压力高于司机单位时间收入变化，需要先验证供给侧激励。",
+    "evidence_metric": {
+      "post_policy_order_count": 47,
+      "tolls_change_rate": 101.019,
+      "driver_pay_per_minute_change_rate": -0.078,
+      "fare_per_mile_change_rate": 0.07
+    },
+    "recommended_action": "对该路线试行司机侧定向激励，并以接单率和取消率作为扩量门槛。",
+    "expected_business_impact": "稳定高价值路线供给，降低司机因通行成本和时间成本带来的拒单风险。",
+    "final_action_score": 0.175,
+    "priority": "Low",
+    "confidence_level": "Low",
+    "created_at": "2026-06-21T13:51:24.557739+00:00"
+  },
+  {
+    "strategy_id": "STRAT_0005",
+    "strategy_type": "route_level_driver_incentive",
+    "target_zone": "",
+    "target_zone_group": "",
+    "target_od_pair": "East Chelsea -> East Chelsea",
+    "target_time_window": "晚高峰优先",
+    "problem_detected": "该高价值路线的通行成本压力高于司机单位时间收入变化，需要先验证供给侧激励。",
+    "evidence_metric": {
+      "post_policy_order_count": 47,
+      "tolls_change_rate": 61.862,
+      "driver_pay_per_minute_change_rate": 0.3,
+      "fare_per_mile_change_rate": 2.794
+    },
+    "recommended_action": "对该路线试行司机侧定向激励，并以接单率和取消率作为扩量门槛。",
+    "expected_business_impact": "稳定高价值路线供给，降低司机因通行成本和时间成本带来的拒单风险。",
+    "final_action_score": 0.102,
+    "priority": "Low",
+    "confidence_level": "Low",
+    "created_at": "2026-06-21T13:51:24.557739+00:00"
+  },
+  {
+    "strategy_id": "STRAT_0006",
+    "strategy_type": "airport_route_strategy",
+    "target_zone": "",
+    "target_zone_group": "",
+    "target_od_pair": "LaGuardia Airport -> Ridgewood",
+    "target_time_window": "航班到达高峰",
+    "problem_detected": "机场路线仍有订单量，但通行成本与司机单位时间收益的组合需要专项运营，而非通用优惠。",
+    "evidence_metric": {
+      "post_policy_order_count": 17,
+      "tolls_change_rate": 94.255,
+      "driver_pay_per_minute_change_rate": 0.041
+    },
+    "recommended_action": "为机场至核心区路线设置优先派单和司机激励试点。",
+    "expected_business_impact": "降低机场高价值路线的供给波动并稳定服务可得性。",
+    "final_action_score": 0.145,
+    "priority": "Low",
+    "confidence_level": "Low",
+    "created_at": "2026-06-21T13:51:24.558744+00:00"
+  },
+  {
+    "strategy_id": "STRAT_0007",
+    "strategy_type": "passenger_discount",
+    "target_zone": "Green-Wood Cemetery",
+    "target_zone_group": "other",
+    "target_od_pair": "",
+    "target_time_window": "17:00-21:00",
+    "problem_detected": "该区域实际需求低于无政策基线，同时乘客单位里程价格上升。",
+    "evidence_metric": {
+      "demand_gap_rate": 0.231,
+      "fare_per_mile_change_rate": 0.228,
+      "driver_pay_per_minute_change_rate": 0.079
+    },
+    "recommended_action": "在目标区域和时段测试乘客侧价格减免，并设置预算上限与对照组。",
+    "expected_business_impact": "验证价格干预能否恢复需求，而不在司机收益已受压的路线重复补贴。",
+    "final_action_score": 0.52,
+    "priority": "Medium",
+    "confidence_level": "Low",
+    "created_at": "2026-06-21T13:51:24.558744+00:00"
+  },
+  {
+    "strategy_id": "STRAT_0008",
+    "strategy_type": "passenger_discount",
+    "target_zone": "Corona",
+    "target_zone_group": "other",
+    "target_od_pair": "",
+    "target_time_window": "08:00-12:00",
+    "problem_detected": "该区域实际需求低于无政策基线，同时乘客单位里程价格上升。",
+    "evidence_metric": {
+      "demand_gap_rate": 0.211,
+      "fare_per_mile_change_rate": 0.177,
+      "driver_pay_per_minute_change_rate": 0.017
+    },
+    "recommended_action": "在目标区域和时段测试乘客侧价格减免，并设置预算上限与对照组。",
+    "expected_business_impact": "验证价格干预能否恢复需求，而不在司机收益已受压的路线重复补贴。",
+    "final_action_score": 0.45,
+    "priority": "Low",
+    "confidence_level": "Low",
+    "created_at": "2026-06-21T13:51:24.558744+00:00"
+  },
+  {
+    "strategy_id": "STRAT_0009",
+    "strategy_type": "boundary_zone_strategy",
+    "target_zone": "Long Island City/Queens Plaza",
+    "target_zone_group": "spillover_zones",
+    "target_od_pair": "",
+    "target_time_window": "18:00-22:00",
+    "problem_detected": "收费区边界附近出现可能的需求承接，应将其作为新的调度节点而不是沿用旧热区。",
+    "evidence_metric": {
+      "spillover_score": 3.421,
+      "post_policy_average_orders": 1.21
+    },
+    "recommended_action": "将边界区加入高峰调度热区，并按小时复核供给响应。",
+    "expected_business_impact": "在需求转移发生时提升匹配效率，避免核心区运力惯性滞留。",
+    "final_action_score": 0.33,
+    "priority": "Low",
+    "confidence_level": "Low",
+    "created_at": "2026-06-21T13:51:24.558744+00:00"
+  },
+  {
+    "strategy_id": "STRAT_0010",
+    "strategy_type": "boundary_zone_strategy",
+    "target_zone": "Astoria",
+    "target_zone_group": "spillover_zones",
+    "target_od_pair": "",
+    "target_time_window": "18:00-22:00",
+    "problem_detected": "收费区边界附近出现可能的需求承接，应将其作为新的调度节点而不是沿用旧热区。",
+    "evidence_metric": {
+      "spillover_score": 2.966,
+      "post_policy_average_orders": 1.92
+    },
+    "recommended_action": "将边界区加入高峰调度热区，并按小时复核供给响应。",
+    "expected_business_impact": "在需求转移发生时提升匹配效率，避免核心区运力惯性滞留。",
+    "final_action_score": 0.121,
+    "priority": "Low",
+    "confidence_level": "Low",
+    "created_at": "2026-06-21T13:51:24.558744+00:00"
+  },
+  {
+    "strategy_id": "STRAT_0011",
+    "strategy_type": "reduce_low_value_supply",
+    "target_zone": "Governor's Island/Ellis Island/Liberty Island",
+    "target_zone_group": "other",
+    "target_od_pair": "",
+    "target_time_window": "00:00-04:00",
+    "problem_detected": "该非机场区域的司机单位时间收益走弱，且没有明显外溢承接信号。",
+    "evidence_metric": {
+      "driver_pay_per_minute_change_rate": -1.0,
+      "spillover_score": -0.0,
+      "demand_gap_rate": 0.0
+    },
+    "recommended_action": "下调该区域的司机推荐权重，避免在低价值时段扩大无效等待。",
+    "expected_business_impact": "减少低收益供给占用，把运力释放给需求更强的区域或路线。",
+    "final_action_score": 0.0,
+    "priority": "Low",
+    "confidence_level": "Low",
+    "created_at": "2026-06-21T13:51:24.560744+00:00"
+  },
+  {
+    "strategy_id": "STRAT_0012",
+    "strategy_type": "reduce_low_value_supply",
+    "target_zone": "Maspeth",
+    "target_zone_group": "other",
+    "target_od_pair": "",
+    "target_time_window": "06:00-10:00",
+    "problem_detected": "该非机场区域的司机单位时间收益走弱，且没有明显外溢承接信号。",
+    "evidence_metric": {
+      "driver_pay_per_minute_change_rate": -0.028,
+      "spillover_score": -0.343,
+      "demand_gap_rate": 0.007
+    },
+    "recommended_action": "下调该区域的司机推荐权重，避免在低价值时段扩大无效等待。",
+    "expected_business_impact": "减少低收益供给占用，把运力释放给需求更强的区域或路线。",
+    "final_action_score": 0.009,
+    "priority": "Low",
+    "confidence_level": "Low",
+    "created_at": "2026-06-21T13:51:24.560744+00:00"
+  }
+]

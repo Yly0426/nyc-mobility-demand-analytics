@@ -15,6 +15,7 @@ def main() -> int:
     """Produce pre/post OD metrics for pricing and driver-side operations."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", default="data/processed/trip_policy_features.parquet")
+    parser.add_argument("--sample", action="store_true", help="Run the same analysis against bounded trip records.")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     data = read_panel(args.input)
