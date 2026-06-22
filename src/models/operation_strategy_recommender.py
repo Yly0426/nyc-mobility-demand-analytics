@@ -76,7 +76,7 @@ def zone_context(panel: pd.DataFrame, predictions: pd.DataFrame, spillover: pd.D
     post = panel.loc[panel["post_policy"]].copy()
     pre = panel.loc[~panel["post_policy"]].copy()
     keys = ["zone_id", "zone_name", "zone_group"]
-    measures = ["order_count", "avg_fare_per_mile", "avg_driver_pay_per_minute", "avg_tolls"]
+    measures = ["order_count", "avg_fare_per_mile", "avg_driver_pay_per_minute", "avg_tolls", "response_time_p90", "slow_response_rate"]
     post_summary = post.groupby(keys, as_index=False)[measures].mean().rename(columns={value: f"{value}_post" for value in measures})
     pre_summary = pre.groupby(keys, as_index=False)[measures].mean().rename(columns={value: f"{value}_pre" for value in measures})
     context = post_summary.merge(pre_summary, on=keys, how="outer").fillna(0)
@@ -103,6 +103,8 @@ def zone_context(panel: pd.DataFrame, predictions: pd.DataFrame, spillover: pd.D
     context["fare_per_mile_change_rate"] = safe_rate(context["avg_fare_per_mile_post"], context["avg_fare_per_mile_pre"]).fillna(0)
     context["driver_pay_per_minute_change_rate"] = safe_rate(context["avg_driver_pay_per_minute_post"], context["avg_driver_pay_per_minute_pre"]).fillna(0)
     context["tolls_change_rate"] = safe_rate(context["avg_tolls_post"], context["avg_tolls_pre"]).fillna(0)
+    context["response_time_p90_change"] = (context["response_time_p90_post"] - context["response_time_p90_pre"]).fillna(0)
+    context["slow_response_rate_change"] = (context["slow_response_rate_post"] - context["slow_response_rate_pre"]).fillna(0)
     context["demand_gap_score"] = minmax(context["demand_gap_rate"].clip(lower=0))
     context["driver_pressure_score"] = (minmax(context["tolls_change_rate"]) - minmax(context["driver_pay_per_minute_change_rate"])).clip(0, 1)
     context["passenger_price_pressure_score"] = minmax(context["fare_per_mile_change_rate"].clip(lower=0))
@@ -188,7 +190,7 @@ def generate_recommendations(zones: pd.DataFrame, routes: pd.DataFrame) -> tuple
     cards: list[dict] = []
     sequence = 1
     for _, row in supply.head(3).iterrows():
-        cards.append(card("driver_supply_reallocation", sequence, zone=row.zone_name, zone_group=row.zone_group, od=None, window=row.target_time_window, problem="边界区域的外溢评分和政策后需求表明，该区域可能承接了核心区转移需求。", evidence={"spillover_score": round(row.spillover_score, 3), "demand_gap_rate": round(row.demand_gap_rate, 3), "post_policy_average_orders": round(row.order_count_post, 2)}, action=row.recommended_action, impact=row.expected_business_impact, score=row.final_action_score, sample_size=row.order_count_post, signals=2)); sequence += 1
+        cards.append(card("driver_supply_reallocation", sequence, zone=row.zone_name, zone_group=row.zone_group, od=None, window=row.target_time_window, problem="边界区域的外溢评分和政策后需求表明，该区域可能承接了核心区转移需求；响应时长代理用于判断供给是否跟上。", evidence={"spillover_score": round(row.spillover_score, 3), "demand_gap_rate": round(row.demand_gap_rate, 3), "post_policy_average_orders": round(row.order_count_post, 2), "response_time_p90_change_min": round(row.response_time_p90_change, 2), "slow_response_rate_change": round(row.slow_response_rate_change, 3)}, action=row.recommended_action, impact=row.expected_business_impact, score=row.final_action_score, sample_size=row.order_count_post, signals=3)); sequence += 1
     for _, row in incentives.loc[~incentives["is_airport_trip"].astype(bool)].head(2).iterrows() if not incentives.empty else []:
         cards.append(card("route_level_driver_incentive", sequence, zone=None, zone_group=None, od=row.target_od_pair, window="晚高峰优先", problem="该高价值路线的通行成本压力高于司机单位时间收入变化，需要先验证供给侧激励。", evidence={"post_policy_order_count": int(row.trip_count_post), "tolls_change_rate": round(row.tolls_per_trip_change_rate, 3), "driver_pay_per_minute_change_rate": round(row.driver_pay_per_minute_change_rate, 3), "fare_per_mile_change_rate": round(row.fare_per_mile_change_rate, 3)}, action=row.recommended_action, impact=row.expected_business_impact, score=row.final_action_score, sample_size=row.trip_count_post, signals=3)); sequence += 1
     for _, row in incentives.loc[incentives["is_airport_trip"].astype(bool)].head(2).iterrows() if not incentives.empty else []:
@@ -196,7 +198,7 @@ def generate_recommendations(zones: pd.DataFrame, routes: pd.DataFrame) -> tuple
     for _, row in discounts.head(2).iterrows():
         cards.append(card("passenger_discount", sequence, zone=row.zone_name, zone_group=row.zone_group, od=None, window=row.target_time_window, problem="该区域实际需求低于无政策基线，同时乘客单位里程价格上升。", evidence={"demand_gap_rate": round(row.demand_gap_rate, 3), "fare_per_mile_change_rate": round(row.fare_per_mile_change_rate, 3), "driver_pay_per_minute_change_rate": round(row.driver_pay_per_minute_change_rate, 3)}, action=row.recommended_action, impact=row.expected_business_impact, score=row.final_action_score, sample_size=row.actual_order_count, signals=3)); sequence += 1
     for _, row in supply.head(2).iterrows():
-        cards.append(card("boundary_zone_strategy", sequence, zone=row.zone_name, zone_group=row.zone_group, od=None, window=row.target_time_window, problem="收费区边界附近出现可能的需求承接，应将其作为新的调度节点而不是沿用旧热区。", evidence={"spillover_score": round(row.spillover_score, 3), "post_policy_average_orders": round(row.order_count_post, 2)}, action="将边界区加入高峰调度热区，并按小时复核供给响应。", impact="在需求转移发生时提升匹配效率，避免核心区运力惯性滞留。", score=row.final_action_score, sample_size=row.order_count_post, signals=2)); sequence += 1
+        cards.append(card("boundary_zone_strategy", sequence, zone=row.zone_name, zone_group=row.zone_group, od=None, window=row.target_time_window, problem="收费区边界附近出现可能的需求承接，应将其作为新的调度节点而不是沿用旧热区。", evidence={"spillover_score": round(row.spillover_score, 3), "post_policy_average_orders": round(row.order_count_post, 2), "response_time_p90_change_min": round(row.response_time_p90_change, 2)}, action="将边界区加入高峰调度热区，并按小时复核供给响应。", impact="在需求转移发生时提升匹配效率，避免核心区运力惯性滞留。", score=row.final_action_score, sample_size=row.order_count_post, signals=3)); sequence += 1
     low_value = zones.loc[(zones["zone_group"] == "other") & (zones["driver_pay_per_minute_change_rate"] < 0)].nsmallest(2, "final_action_score")
     for _, row in low_value.iterrows():
         cards.append(card("reduce_low_value_supply", sequence, zone=row.zone_name, zone_group=row.zone_group, od=None, window=hour_window(row.hour), problem="该非机场区域的司机单位时间收益走弱，且没有明显外溢承接信号。", evidence={"driver_pay_per_minute_change_rate": round(row.driver_pay_per_minute_change_rate, 3), "spillover_score": round(row.spillover_score, 3), "demand_gap_rate": round(row.demand_gap_rate, 3)}, action="下调该区域的司机推荐权重，避免在低价值时段扩大无效等待。", impact="减少低收益供给占用，把运力释放给需求更强的区域或路线。", score=row.final_action_score, sample_size=row.order_count_post, signals=2)); sequence += 1

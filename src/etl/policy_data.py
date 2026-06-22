@@ -24,6 +24,8 @@ def normalize_hvfhv(raw: pd.DataFrame) -> pd.DataFrame:
     """Map HVFHV trip records to the policy-analysis canonical schema."""
     data = pd.DataFrame(index=raw.index)
     data["service_type"] = "high_volume_fhv"
+    data["request_datetime"] = pd.to_datetime(raw.get("request_datetime", pd.Series(pd.NaT, index=raw.index)), errors="coerce")
+    data["on_scene_datetime"] = pd.to_datetime(raw.get("on_scene_datetime", pd.Series(pd.NaT, index=raw.index)), errors="coerce")
     data["pickup_datetime"] = pd.to_datetime(raw["pickup_datetime"], errors="coerce")
     data["dropoff_datetime"] = pd.to_datetime(raw["dropoff_datetime"], errors="coerce")
     data["pickup_location_id"] = pd.to_numeric(raw["PULocationID"], errors="coerce")
@@ -41,6 +43,9 @@ def normalize_yellow(raw: pd.DataFrame) -> pd.DataFrame:
     """Map Yellow Taxi records to the same schema; driver pay is unavailable."""
     data = pd.DataFrame(index=raw.index)
     data["service_type"] = "yellow_taxi"
+    # Yellow Taxi data has no equivalent request/arrival timestamps.
+    data["request_datetime"] = pd.NaT
+    data["on_scene_datetime"] = pd.NaT
     data["pickup_datetime"] = pd.to_datetime(raw["tpep_pickup_datetime"], errors="coerce")
     data["dropoff_datetime"] = pd.to_datetime(raw["tpep_dropoff_datetime"], errors="coerce")
     data["pickup_location_id"] = pd.to_numeric(raw["PULocationID"], errors="coerce")
@@ -68,6 +73,12 @@ def _finish_clean(data: pd.DataFrame) -> pd.DataFrame:
     ].copy()
     data["pickup_location_id"] = data["pickup_location_id"].astype(int)
     data["dropoff_location_id"] = data["dropoff_location_id"].astype(int)
+    data["response_time_min"] = (data["on_scene_datetime"] - data["request_datetime"]).dt.total_seconds() / 60
+    data["pickup_wait_proxy_min"] = (data["pickup_datetime"] - data["request_datetime"]).dt.total_seconds() / 60
+    # Preserve trips with unavailable platform-arrival data, but discard impossible proxy values.
+    for column in ("response_time_min", "pickup_wait_proxy_min"):
+        data.loc[~data[column].between(0, 240), column] = pd.NA
+    data["slow_response_flag"] = data["response_time_min"].gt(10)
     return data
 
 
@@ -117,6 +128,9 @@ def build_zone_hour_panel(data: pd.DataFrame) -> pd.DataFrame:
         avg_base_fare=("base_passenger_fare", "mean"), avg_total_amount=("total_amount", "mean"), avg_driver_pay=("driver_pay", "mean"),
         avg_fare_per_mile=("fare_per_mile", "mean"), avg_driver_pay_per_minute=("driver_pay_per_minute", "mean"),
         avg_tolls=("tolls", "mean"), airport_trip_count=("is_airport_trip", "sum"),
+        avg_response_time_min=("response_time_min", "mean"), response_time_p50=("response_time_min", "median"),
+        response_time_p90=("response_time_min", lambda values: values.quantile(0.9)),
+        slow_response_rate=("slow_response_flag", "mean"), valid_response_count=("response_time_min", "count"),
         short_trip_count=("trip_miles", lambda s: (s < 2).sum()), long_trip_count=("trip_miles", lambda s: (s >= 8).sum()),
         treated_pickup_count=("is_pickup_treated", "sum"), treated_dropoff_count=("is_dropoff_treated", "sum"),
         spillover_pickup_count=("is_pickup_spillover", "sum"), control_pickup_count=("is_pickup_control", "sum"),
@@ -133,6 +147,8 @@ def build_od_panel(data: pd.DataFrame) -> pd.DataFrame:
         od_order_count=("service_type", "size"), avg_trip_miles=("trip_miles", "mean"), avg_trip_time=("trip_time", "mean"),
         avg_base_fare=("base_passenger_fare", "mean"), avg_driver_pay=("driver_pay", "mean"), avg_tolls=("tolls", "mean"),
         avg_fare_per_mile=("fare_per_mile", "mean"), avg_driver_pay_per_minute=("driver_pay_per_minute", "mean"),
+        avg_response_time_min=("response_time_min", "mean"), response_time_p90=("response_time_min", lambda values: values.quantile(0.9)),
+        slow_response_rate=("slow_response_flag", "mean"), valid_response_count=("response_time_min", "count"),
         is_cross_treated_od=("is_cross_treated_trip", "max"), is_airport_od=("is_airport_trip", "max"),
     ).reset_index().rename(columns={"trip_hour": "hour"})
 
