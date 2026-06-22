@@ -6,9 +6,22 @@ import json
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+from matplotlib import font_manager
 import pandas as pd
 
 from src.utils.project import FIGURES_DIR, OUTPUTS_DIR, TABLES_DIR, ensure_output_dirs, resolve_project_path
+
+
+def configure_plot_fonts() -> None:
+    """Prefer an installed Chinese font for report figures and exported legends."""
+    available = {font.name for font in font_manager.fontManager.ttflist}
+    candidates = ["Microsoft YaHei", "Noto Sans SC", "Source Han Sans CN", "SimHei", "Microsoft JhengHei"]
+    selected = next((font for font in candidates if font in available), "DejaVu Sans")
+    plt.rcParams["font.sans-serif"] = [selected, "DejaVu Sans"]
+    plt.rcParams["axes.unicode_minus"] = False
+
+
+configure_plot_fonts()
 
 
 def read_panel(path: str) -> pd.DataFrame:
