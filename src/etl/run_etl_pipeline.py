@@ -7,6 +7,7 @@ import logging
 
 import pandas as pd
 
+from src.analysis.analysis_utils import save_table
 from src.etl.clean_hvfhv import clean_files
 from src.etl.policy_data import build_od_panel, build_policy_features, build_zone_hour_panel, load_policy_config
 from src.utils.project import PROCESSED_DIR, PROJECT_ROOT, ensure_output_dirs
@@ -42,6 +43,16 @@ def main() -> int:
     zone_panel.to_parquet(PROCESSED_DIR / "zone_hour_policy_panel.parquet", index=False)
     od_panel.to_parquet(PROCESSED_DIR / "od_policy_panel.parquet", index=False)
     zone_panel.head(5000).to_csv(PROJECT_ROOT / "data/outputs/zone_hour_policy_panel_sample.csv", index=False)
+    sample_input_count = len(files) * rows
+    quality = pd.DataFrame([{
+        "source_table": "HVFHV bounded sample input",
+        "raw_count": sample_input_count,
+        "valid_count": len(features),
+        "dropped_count": max(sample_input_count - len(features), 0),
+        "drop_rate": max(sample_input_count - len(features), 0) / sample_input_count if sample_input_count else 0,
+        "drop_reason": "invalid time, location, distance, duration or fare values",
+    }])
+    save_table(quality, "data_quality_summary.csv")
     logging.info("Pipeline complete: %s trips, %s zone-hours, %s OD-hours", len(features), len(zone_panel), len(od_panel))
     return 0
 

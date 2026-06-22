@@ -1,0 +1,5 @@
+zone_group,order_count_pre,order_count_post,absolute_change,change_rate,business_interpretation
+control_zones,4555,5991,1436,0.31525795828759606,用于比较政策前后不同区域组的订单变化。
+other,97718,132953,35235,0.36057839906670214,用于比较政策前后不同区域组的订单变化。
+spillover_zones,7070,9715,2645,0.3741159830268741,用于识别可能承接核心区转移需求的区域组。
+treated_zones,17464,24452,6988,0.4001374255611544,用于比较政策前后不同区域组的订单变化。

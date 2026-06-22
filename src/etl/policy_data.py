@@ -36,6 +36,9 @@ def normalize_hvfhv(raw: pd.DataFrame) -> pd.DataFrame:
     data["driver_pay"] = pd.to_numeric(raw.get("driver_pay"), errors="coerce")
     data["tips"] = pd.to_numeric(raw.get("tips"), errors="coerce").fillna(0)
     data["tolls"] = pd.to_numeric(raw.get("tolls"), errors="coerce").fillna(0)
+    data["congestion_surcharge"] = pd.to_numeric(raw.get("congestion_surcharge", pd.Series(0, index=raw.index)), errors="coerce").fillna(0)
+    data["cbd_congestion_fee"] = pd.to_numeric(raw.get("cbd_congestion_fee", pd.Series(0, index=raw.index)), errors="coerce").fillna(0)
+    data["airport_fee"] = pd.to_numeric(raw.get("airport_fee", pd.Series(0, index=raw.index)), errors="coerce").fillna(0)
     return _finish_clean(data)
 
 
@@ -56,6 +59,9 @@ def normalize_yellow(raw: pd.DataFrame) -> pd.DataFrame:
     data["driver_pay"] = pd.NA
     data["tips"] = pd.to_numeric(raw.get("tip_amount"), errors="coerce").fillna(0)
     data["tolls"] = pd.to_numeric(raw.get("tolls_amount"), errors="coerce").fillna(0)
+    data["congestion_surcharge"] = pd.to_numeric(raw.get("congestion_surcharge", pd.Series(0, index=raw.index)), errors="coerce").fillna(0)
+    data["cbd_congestion_fee"] = pd.to_numeric(raw.get("cbd_congestion_fee", pd.Series(0, index=raw.index)), errors="coerce").fillna(0)
+    data["airport_fee"] = pd.to_numeric(raw.get("Airport_fee", pd.Series(0, index=raw.index)), errors="coerce").fillna(0)
     return _finish_clean(data)
 
 
@@ -117,6 +123,8 @@ def build_policy_features(trips: pd.DataFrame, zones: pd.DataFrame, policy_confi
     data["driver_pay_per_minute"] = data["driver_pay"] / data["trip_time"].clip(lower=1)
     data["tip_rate"] = data["tips"] / data["base_passenger_fare"].clip(lower=0.01)
     data["driver_pay_to_fare_ratio"] = data["driver_pay"] / data["base_passenger_fare"].clip(lower=0.01)
+    data["toll_burden_rate"] = data["tolls"] / data["base_passenger_fare"].clip(lower=0.01)
+    data["policy_fee_burden_rate"] = (data["congestion_surcharge"] + data["cbd_congestion_fee"]) / data["base_passenger_fare"].clip(lower=0.01)
     return data
 
 
@@ -128,10 +136,12 @@ def build_zone_hour_panel(data: pd.DataFrame) -> pd.DataFrame:
         avg_base_fare=("base_passenger_fare", "mean"), avg_total_amount=("total_amount", "mean"), avg_driver_pay=("driver_pay", "mean"),
         avg_fare_per_mile=("fare_per_mile", "mean"), avg_driver_pay_per_minute=("driver_pay_per_minute", "mean"),
         avg_tolls=("tolls", "mean"), airport_trip_count=("is_airport_trip", "sum"),
+        avg_cbd_congestion_fee=("cbd_congestion_fee", "mean"), avg_congestion_surcharge=("congestion_surcharge", "mean"),
+        avg_policy_fee_burden_rate=("policy_fee_burden_rate", "mean"),
         avg_response_time_min=("response_time_min", "mean"), response_time_p50=("response_time_min", "median"),
         response_time_p90=("response_time_min", lambda values: values.quantile(0.9)),
         slow_response_rate=("slow_response_flag", "mean"), valid_response_count=("response_time_min", "count"),
-        short_trip_count=("trip_miles", lambda s: (s < 2).sum()), long_trip_count=("trip_miles", lambda s: (s >= 8).sum()),
+        short_trip_count=("trip_miles", lambda s: (s <= 2).sum()), medium_trip_count=("trip_miles", lambda s: ((s > 2) & (s <= 8)).sum()), long_trip_count=("trip_miles", lambda s: (s > 8).sum()),
         treated_pickup_count=("is_pickup_treated", "sum"), treated_dropoff_count=("is_dropoff_treated", "sum"),
         spillover_pickup_count=("is_pickup_spillover", "sum"), control_pickup_count=("is_pickup_control", "sum"),
     ).reset_index().rename(columns={"pickup_location_id": "zone_id", "pickup_zone_name": "zone_name", "trip_hour": "hour", "pickup_zone_group": "zone_group"})
@@ -146,6 +156,8 @@ def build_od_panel(data: pd.DataFrame) -> pd.DataFrame:
     return data.groupby(keys, dropna=False).agg(
         od_order_count=("service_type", "size"), avg_trip_miles=("trip_miles", "mean"), avg_trip_time=("trip_time", "mean"),
         avg_base_fare=("base_passenger_fare", "mean"), avg_driver_pay=("driver_pay", "mean"), avg_tolls=("tolls", "mean"),
+        avg_cbd_congestion_fee=("cbd_congestion_fee", "mean"), avg_congestion_surcharge=("congestion_surcharge", "mean"),
+        avg_policy_fee_burden_rate=("policy_fee_burden_rate", "mean"),
         avg_fare_per_mile=("fare_per_mile", "mean"), avg_driver_pay_per_minute=("driver_pay_per_minute", "mean"),
         avg_response_time_min=("response_time_min", "mean"), response_time_p90=("response_time_min", lambda values: values.quantile(0.9)),
         slow_response_rate=("slow_response_flag", "mean"), valid_response_count=("response_time_min", "count"),

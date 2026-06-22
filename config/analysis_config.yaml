@@ -1,0 +1,13 @@
+analysis:
+  mode: sample
+  report_language: zh-CN
+  policy_config: config/policy_zones.yaml
+sample:
+  rows_per_file: 60000
+paths:
+  trip_features: data/processed/trip_policy_features.parquet
+  zone_panel: data/processed/zone_hour_policy_panel.parquet
+  od_panel: data/processed/od_policy_panel.parquet
+notes:
+  - "样本模式使用真实 NYC TLC 订单的有界抽样，不代表全市生产结论。"
+  - "响应时长基于 request_datetime 到 on_scene_datetime，是公开数据代理指标。"
