@@ -107,11 +107,16 @@ def pricing_pressure(data: pd.DataFrame) -> None:
     result["passenger_discount_signal"] = (result["fare_per_mile_change_rate"] > 0) & (result["orders_post"] < result["orders_pre"])
     result["business_interpretation"] = "单位里程价格上升且订单下降的分组，是乘客优惠的候选对象。"
     save_table(result, "pricing_pressure_summary.csv")
-    for column, name, title in [("fare_per_mile_change_rate", "fare_per_mile_change.png", "Fare per mile change"), ("policy_fee_burden_change_rate", "policy_fee_burden_change.png", "Policy fee burden change")]:
+    for column, name, title in [("fare_per_mile_change_rate", "fare_per_mile_change.png", "每英里票价政策后相对变化"), ("policy_fee_burden_change_rate", "policy_fee_burden_change.png", "政策费用负担政策后相对变化")]:
         fig, ax = plt.subplots(figsize=(7, 4))
-        ax.bar(result["distance_segment"].astype(str), result[column].fillna(0))
+        values = result[column].fillna(0) * 100
+        colors = np.where(values >= 0, "#d55e00", "#0072b2")
+        bars = ax.bar(result["distance_segment"].astype(str), values, color=colors)
         ax.axhline(0, color="black", linewidth=0.8)
         ax.set_title(title)
+        ax.set_ylabel("变化率（%）")
+        for bar, value in zip(bars, values):
+            ax.text(bar.get_x() + bar.get_width() / 2, value + (0.15 if value >= 0 else -0.45), f"{value:.1f}%", ha="center", va="bottom" if value >= 0 else "top")
         save_plot(fig, name)
 
 
@@ -168,11 +173,16 @@ def response_time(data: pd.DataFrame) -> None:
     result["supply_reallocation_signal"] = (result["response_time_p90_post"] > result["response_time_p90_pre"]) & result["zone_group"].eq("spillover_zones")
     result["business_interpretation"] = "外溢区订单承接且 P90 响应时长变慢，说明司机供给可能未同步迁移。"
     save_table(result, "response_time_analysis.csv")
-    chart = result.groupby("zone_group", as_index=False)[["response_time_p90_pre", "response_time_p90_post"]].mean().melt(id_vars="zone_group", var_name="period", value_name="response_time_p90")
+    zone_labels = {"control_zones": "对照区", "other": "其他区域", "spillover_zones": "外溢区", "treated_zones": "收费核心区"}
+    chart = result.groupby("zone_group", as_index=False)[["response_time_p90_pre", "response_time_p90_post"]].mean()
+    chart["zone_label"] = chart["zone_group"].map(zone_labels).fillna(chart["zone_group"])
     fig, ax = plt.subplots(figsize=(8, 4))
-    for period, values in chart.groupby("period"):
-        ax.bar(values["zone_group"], values["response_time_p90"], label="政策后" if period.endswith("post") else "政策前", alpha=0.8)
-    ax.set_title("Response time P90 proxy by zone group")
-    ax.set_ylabel("Minutes")
+    positions = np.arange(len(chart))
+    width = 0.36
+    ax.bar(positions - width / 2, chart["response_time_p90_pre"], width=width, label="政策前", color="#0072b2")
+    ax.bar(positions + width / 2, chart["response_time_p90_post"], width=width, label="政策后", color="#d55e00")
+    ax.set_xticks(positions, chart["zone_label"])
+    ax.set_title("各区域组 P90 接驾响应时长代理")
+    ax.set_ylabel("分钟")
     ax.legend()
     save_plot(fig, "response_time_p90_change.png")
