@@ -43,8 +43,9 @@ def demand_shift(data: pd.DataFrame) -> None:
     fig, ax = plt.subplots(figsize=(9, 4))
     for label, frame in daily.groupby("post_policy"):
         ax.plot(frame["trip_date"], frame["order_count"], label="政策后" if label else "政策前")
-    ax.set_title("Daily order trend")
-    ax.set_ylabel("Orders")
+    ax.set_title("每日订单趋势（有界真实样本）")
+    ax.set_xlabel("日期")
+    ax.set_ylabel("订单量")
     ax.legend()
     save_plot(fig, "daily_order_trend.png")
     fig, ax = plt.subplots(figsize=(7, 4))
