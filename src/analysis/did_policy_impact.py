@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import shutil
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -12,7 +13,7 @@ import statsmodels.formula.api as smf
 from src.analysis.analysis_utils import read_panel, save_json, save_plot, save_table
 
 
-METRICS = ["log_order_count", "avg_fare_per_mile", "avg_driver_pay_per_minute", "airport_trip_count", "short_trip_count"]
+METRICS = ["log_order_count", "avg_fare_per_mile", "avg_driver_pay_per_minute", "avg_response_time_min"]
 
 
 def estimate_did(panel: pd.DataFrame, metric: str) -> dict:
@@ -51,9 +52,10 @@ def main() -> int:
     fig, ax = plt.subplots(figsize=(8, 4))
     ax.errorbar(results["metric_name"], results["coef_treated_post"], yerr=1.96 * results["std_error"], fmt="o", color="#0b6e99")
     ax.axhline(0, color="black", linewidth=0.8)
-    ax.set_title("DiD estimates: congestion-pricing effect relative to control zones")
+    ax.set_title("拥堵收费政策的 DiD 相对变化估计")
     ax.tick_params(axis="x", rotation=25)
-    save_plot(fig, "did_summary.png")
+    primary = save_plot(fig, "did_effect_summary.png")
+    shutil.copyfile(primary, primary.with_name("did_summary.png"))
     logging.info("Wrote %s DiD estimates", len(results))
     return 0
 

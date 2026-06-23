@@ -1,6 +1,5 @@
 metric_name,coef_treated_post,std_error,p_value,confidence_interval_low,confidence_interval_high,n_observations,business_interpretation
-log_order_count,0.008850202703518915,0.008986849077631138,0.3247248500571258,-0.00876369782313512,0.02646410323017295,28150,Policy-period treated-zone change relative to control zones; negative demand coefficients indicate a relative demand contraction.
-avg_fare_per_mile,-0.5793063929260088,0.22830842625163633,0.011168403152801215,-1.026782685746235,-0.1318301001057826,28150,Policy-period treated-zone price or driver-side metric change relative to control zones.
-avg_driver_pay_per_minute,-0.019310250425933005,0.008049304185501134,0.016440083781623534,-0.03508659673012274,-0.003533904121743269,28150,Policy-period treated-zone price or driver-side metric change relative to control zones.
-airport_trip_count,0.000892261851505298,0.007861500923504194,0.9096360289754281,-0.014515996822991295,0.01630052052600189,28150,Policy-period treated-zone price or driver-side metric change relative to control zones.
-short_trip_count,-0.012000482577694488,0.02361936698287498,0.6113985884827023,-0.058293591201763924,0.034292626046374945,28150,Policy-period treated-zone price or driver-side metric change relative to control zones.
+log_order_count,-0.003428252658426507,0.008388783535572436,0.6827811096343528,-0.01986996626225106,0.013013460945398046,7574,Policy-period treated-zone change relative to control zones; negative demand coefficients indicate a relative demand contraction.
+avg_fare_per_mile,-0.7008826519573896,0.2831037823788012,0.013297181691529752,-1.2557558693069053,-0.14600943460787408,7574,Policy-period treated-zone price or driver-side metric change relative to control zones.
+avg_driver_pay_per_minute,-0.015954937930125382,0.017539792900597338,0.363011171646466,-0.050332300311587495,0.01842242445133673,7574,Policy-period treated-zone price or driver-side metric change relative to control zones.
+avg_response_time_min,-0.39103100104348876,0.18168862992615348,0.03138128859350221,-0.7471341720991758,-0.034927829987801695,6071,Policy-period treated-zone price or driver-side metric change relative to control zones.

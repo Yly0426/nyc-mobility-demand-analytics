@@ -7,3 +7,4 @@ streamlit>=1.36
 PyYAML>=6.0
 statsmodels>=0.14
 matplotlib>=3.8
+xgboost>=2.0

@@ -1,0 +1,17 @@
+recommendation_type,target_zone_or_route,evidence_metric,recommended_action,business_value,confidence_level
+driver_supply_reallocation,City Island,平均响应代理 11.1 分钟,在高需求时段前预部署司机并监控响应代理,降低可能的供给滞后,低
+driver_supply_reallocation,Randalls Island,平均响应代理 9.52 分钟,在高需求时段前预部署司机并监控响应代理,降低可能的供给滞后,低
+driver_supply_reallocation,Crotona Park,平均响应代理 9.35 分钟,在高需求时段前预部署司机并监控响应代理,降低可能的供给滞后,低
+driver_supply_reallocation,Broad Channel,平均响应代理 8.69 分钟,在高需求时段前预部署司机并监控响应代理,降低可能的供给滞后,低
+route_priority,JFK Airport → Outside of NYC,订单量 154,将高频路线纳入重点保障与运力观察,保障核心出行场景,中
+route_priority,East New York → East New York,订单量 153,将高频路线纳入重点保障与运力观察,保障核心出行场景,中
+route_priority,Borough Park → Borough Park,订单量 119,将高频路线纳入重点保障与运力观察,保障核心出行场景,中
+route_priority,Canarsie → Canarsie,订单量 114,将高频路线纳入重点保障与运力观察,保障核心出行场景,中
+driver_incentive,Borough Park → Borough Park,司机每分钟收益 0.87,先以小范围激励测试接单与履约变化,缓解高频低收益路线供给压力,低
+driver_incentive,Jackson Heights → Jackson Heights,司机每分钟收益 0.91,先以小范围激励测试接单与履约变化,缓解高频低收益路线供给压力,低
+driver_incentive,Greenpoint → Williamsburg (North Side),司机每分钟收益 0.91,先以小范围激励测试接单与履约变化,缓解高频低收益路线供给压力,低
+driver_incentive,Forest Hills → Forest Hills,司机每分钟收益 0.94,先以小范围激励测试接单与履约变化,缓解高频低收益路线供给压力,低
+passenger_discount,Central Harlem North → Central Harlem North,每英里票价 11.9,在验证需求弹性后测试定向优惠,降低高价格路线的需求流失风险,低
+passenger_discount,Astoria → Astoria,每英里票价 11.27,在验证需求弹性后测试定向优惠,降低高价格路线的需求流失风险,低
+passenger_discount,Borough Park → Borough Park,每英里票价 11.02,在验证需求弹性后测试定向优惠,降低高价格路线的需求流失风险,低
+passenger_discount,Jamaica → Jamaica,每英里票价 10.84,在验证需求弹性后测试定向优惠,降低高价格路线的需求流失风险,低

@@ -54,10 +54,12 @@ def main() -> int:
     before, after = cfg["policy"]["event_window_weeks_before"], cfg["policy"]["event_window_weeks_after"]
     demand = event_estimates(panel, "log_order_count", start, -before, after)
     fare = event_estimates(panel.dropna(subset=["avg_fare_per_mile"]), "avg_fare_per_mile", start, -before, after)
-    results = pd.concat([demand, fare], ignore_index=True)
+    driver = event_estimates(panel.dropna(subset=["avg_driver_pay_per_minute"]), "avg_driver_pay_per_minute", start, -before, after)
+    results = pd.concat([demand, fare, driver], ignore_index=True)
     save_table(results, "event_study_results.csv")
     plot_event(demand, "Weekly relative demand shift in treated zones", "event_study_order_count.png")
     plot_event(fare, "Weekly relative fare-per-mile shift in treated zones", "event_study_fare_per_mile.png")
+    plot_event(driver, "Weekly relative driver-pay-per-minute shift in treated zones", "event_study_driver_pay.png")
     logging.info("Wrote %s weekly event estimates", len(results))
     return 0
 

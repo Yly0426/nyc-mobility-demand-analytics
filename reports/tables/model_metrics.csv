@@ -1,2 +1,2 @@
-MAE_pre_policy,RMSE_pre_policy,mean_post_policy_demand_gap
-0.686209281275718,1.226550130249662,-0.06912641262491384
+model_name,mae,rmse,mape,r2_score,train_start_date,train_end_date,test_start_date,test_end_date
+random_forest,0.19111921481029284,0.3197422399715723,0.15240194161366147,0.023721683449064668,2024-11-01,2025-03-01,2025-03-02,2025-03-31

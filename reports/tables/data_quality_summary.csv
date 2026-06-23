@@ -1,2 +1,2 @@
 source_table,raw_count,valid_count,dropped_count,drop_rate,drop_reason
-HVFHV bounded sample input,300000,299918,82,0.00027333333333333333,"invalid time, location, distance, duration or fare values"
+HVFHV bounded sample input,50000,49986,14,0.00028,"invalid time, location, distance, duration or fare values"
